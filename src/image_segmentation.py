@@ -13,7 +13,6 @@ import argparse
 from tqdm import tqdm
 
 
-# U-Net Model Definition
 
 class UNet(nn.Module):
     def __init__(self, in_channels=3, out_channels=1):
@@ -48,13 +47,12 @@ class UNet(nn.Module):
         self.out_conv = nn.Conv2d(64, out_channels, kernel_size=1)
 
     def forward(self, x):
-        # Encoder
         e1 = self.encoder1(x)
         e2 = self.encoder2(self.pool(e1))
         e3 = self.encoder3(self.pool(e2))
         e4 = self.encoder4(self.pool(e3))
 
-        # Bottleneck
+    
         b = self.bottleneck(self.pool(e4))
 
         # Decoder
@@ -77,7 +75,6 @@ class UNet(nn.Module):
         return self.out_conv(d1)
 
 
-# Custom Dataset Class
 
 class SegmentationDataset(Dataset):
     def __init__(self, image_dir, mask_dir, transform=None):
@@ -138,7 +135,7 @@ def train(model, train_loader, criterion, optimizer, device):
     return running_loss / len(train_loader)
 
 
-# Evaluate Function
+
 
 def evaluate(model, val_loader, device):
     model.eval()
@@ -153,7 +150,7 @@ def evaluate(model, val_loader, device):
 
     return total_dice / len(val_loader)
 
-# Load Data
+
 
 def load_data(image_dir, mask_dir, batch_size):
     transform = transforms.Compose([
